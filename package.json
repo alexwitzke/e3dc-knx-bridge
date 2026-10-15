@@ -8,6 +8,6 @@
   },
   "dependencies": {
     "knx": "^2.4.1",
-    "modbus-serial": "^8.1.8"
+    "modbus-serial": "^8.0.0"
   }
 }
