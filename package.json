@@ -1,0 +1,13 @@
+{
+  "name": "e3dc-knx-bridge",
+  "version": "1.0.0",
+  "description": "E3/DC Modbus to KNX Bridge",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "knx": "^2.4.1",
+    "modbus-serial": "^8.1.8"
+  }
+}
