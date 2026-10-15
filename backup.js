@@ -77,7 +77,10 @@ setInterval(async () => {
         const leistung = leistungData.data[0] + leistungData.data[1] * 65536;
 
         var zusaetzlicheEinspeisungData = await client.readHoldingRegisters(40075, 2);
-        const zusaetzlicheEinspeisung = 65535 - zusaetzlicheEinspeisungData.data[0];
+        //TODO: const zusaetzlicheEinspeisung = 65535 - zusaetzlicheEinspeisungData.data[0]; //wenn dunkel und produktion 0, dann passt das nicht, es werden immer 65535 ausgegeben
+        //TODO: geht das so?
+        const zusaetzlicheEinspeisung = zusaetzlicheEinspeisungData.data[1] * 65535 + zusaetzlicheEinspeisungData.data[0]; //wenn dunkel und produktion 0, dann passt das nicht, es werden immer 65535 ausgegeben
+        //const zusaetzlicheEinspeisung = zusaetzlicheEinspeisungData.data[0]; //wenn dunkel und produktion 0, dann passt das nicht, es werden immer 65535 ausgegeben
 
         const produktionGesamt = leistung + zusaetzlicheEinspeisung;
 
@@ -100,10 +103,10 @@ setInterval(async () => {
         
         */
 
-        console.log(`[${new Date().toLocaleTimeString()}] Hausverbrauch: ${hausverbrauch} W`);
-        //console.log(`[${new Date().toLocaleTimeString()}] PV-Leistung: ${leistung} W`);
-        //console.log(`[${new Date().toLocaleTimeString()}] Zusaetzliche PV-Leistung: ${zusaetzlicheEinspeisung} W`);
-        console.log(`[${new Date().toLocaleTimeString()}] Produktion Gesamt: ${produktionGesamt} W`);
+        //console.log(`[${new Date().toLocaleTimeString()}] Hausverbrauch: ${hausverbrauch} W`);
+        console.log(`[${new Date().toLocaleTimeString()}] PV-Leistung: ${leistung} W`);
+        console.log(`[${new Date().toLocaleTimeString()}] Zusaetzliche PV-Leistung: ${zusaetzlicheEinspeisung} W`);
+        //console.log(`[${new Date().toLocaleTimeString()}] Produktion Gesamt: ${produktionGesamt} W`);
         //console.log(`[${new Date().toLocaleTimeString()}] Leistung am Netzuebergabepunkt: ${leistungAmNetzuebergabepunkt - 65536} W`); //negative Werte sind Einspeisung, positive Werte sind Ausspeisung
         //console.log(`[${new Date().toLocaleTimeString()}] Übergabepunkt: ${leistungAmNetzuebergabepunkt} W \t Einspeisung: ${einspeisung} W`);
 
@@ -119,4 +122,4 @@ setInterval(async () => {
     } catch (err) {
         console.error("Fehler beim Auslesen/Senden:", err.message);
     }
-}, 10000); // Alle 10 Sekunden
+}, 1000); // Alle 10 Sekunden

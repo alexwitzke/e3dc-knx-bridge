@@ -32,20 +32,20 @@ async function pollE3DC() {
             modbusClient.setID(SLAVE_ID);
         }
 
-                // 1. PV-Leistung (Reg 40067, 2 Register)
+        //         // 1. PV-Leistung (Reg 40067, 2 Register)
+        // var leistungData = await modbusClient.readHoldingRegisters(40067, 2);
+        // const leistung = leistungData.data[0] + leistungData.data[1] * 65536;
+
         var leistungData = await modbusClient.readHoldingRegisters(40067, 2);
         const leistung = leistungData.data[0] + leistungData.data[1] * 65536;
 
-        // var leistungData = await client.readHoldingRegisters(40067, 2);
-        // const leistung = leistungData.data[0] + leistungData.data[1] * 65536;
-
         // 2. Zusätzliche Einspeisung / Erzeuger (Reg 40075, 2 Register)
         var zusaetzlicheEinspeisungData = await modbusClient.readHoldingRegisters(40075, 2);
-        const zusaetzlicheEinspeisung = 65535 - zusaetzlicheEinspeisungData.data[0];
+        //TODO: const zusaetzlicheEinspeisung = 65535 - zusaetzlicheEinspeisungData.data[0]; //wenn dunkel und produktion 0, dann passt das nicht, es werden immer 65535 ausgegeben
+        //TODO: geht das so?
+        const zusaetzlicheEinspeisung = zusaetzlicheEinspeisungData.data[1] * 65535 + zusaetzlicheEinspeisungData.data[0]; //wenn dunkel und produktion 0, dann passt das nicht, es werden immer 65535 ausgegeben
 
         const produktionGesamt = leistung + zusaetzlicheEinspeisung;
-
-
 
         // // 2. Zusätzliche Einspeisung / Erzeuger (Reg 40075, 2 Register)
         // var zusaetzlicheEinspeisungData = await modbusClient.readHoldingRegisters(40075, 2);
