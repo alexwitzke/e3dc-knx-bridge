@@ -39,11 +39,21 @@ async function pollE3DC() {
         var leistungData = await modbusClient.readHoldingRegisters(40067, 2);
         const leistung = leistungData.data[0] + leistungData.data[1] * 65536;
 
-        // 2. Zusätzliche Einspeisung / Erzeuger (Reg 40075, 2 Register)
+        // 2. Zusätzliche Einspeisung / Zusatzwechselrichter (Reg 40076 / Index 40075, 2 Register)
         var zusaetzlicheEinspeisungData = await modbusClient.readHoldingRegisters(40075, 2);
-        //TODO: const zusaetzlicheEinspeisung = 65535 - zusaetzlicheEinspeisungData.data[0]; //wenn dunkel und produktion 0, dann passt das nicht, es werden immer 65535 ausgegeben
-        //TODO: geht das so?
-        const zusaetzlicheEinspeisung = zusaetzlicheEinspeisungData.data[1] * 65535 + zusaetzlicheEinspeisungData.data[0]; //wenn dunkel und produktion 0, dann passt das nicht, es werden immer 65535 ausgegeben
+
+        let zusaetzlicheEinspeisungRaw = zusaetzlicheEinspeisungData.data[0] + (zusaetzlicheEinspeisungData.data[1] * 65536);
+
+        // 32-Bit Signed Integer Korrektur (falls der Wert im negativen Bereich liegt)
+        if (zusaetzlicheEinspeisungRaw > 2147483647) {
+            zusaetzlicheEinspeisungRaw = zusaetzlicheEinspeisungRaw - 4294967296;
+        }
+
+        // Da Erzeugerwerte im Portal positiv angezeigt werden, nehmen wir den Betrag:
+        const zusaetzlicheEinspeisung = Math.abs(zusaetzlicheEinspeisungRaw);
+        //console.log(zusaetzlicheEinspeisungData.data, zusaetzlicheEinspeisung);
+
+        //const zusaetzlicheEinspeisung = zusaetzlicheEinspeisungData.data[1] * 65535 + zusaetzlicheEinspeisungData.data[0]; //wenn dunkel und produktion 0, dann passt das nicht, es werden immer 65535 ausgegeben
 
         const produktionGesamt = leistung + zusaetzlicheEinspeisung;
 
