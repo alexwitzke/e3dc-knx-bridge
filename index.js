@@ -32,10 +32,7 @@ async function pollE3DC() {
             modbusClient.setID(SLAVE_ID);
         }
 
-        //         // 1. PV-Leistung (Reg 40067, 2 Register)
-        // var leistungData = await modbusClient.readHoldingRegisters(40067, 2);
-        // const leistung = leistungData.data[0] + leistungData.data[1] * 65536;
-
+        // 1. PV-Leistung (Reg 40067, 2 Register)
         var leistungData = await modbusClient.readHoldingRegisters(40067, 2);
         const leistung = leistungData.data[0] + leistungData.data[1] * 65536;
 
@@ -51,17 +48,10 @@ async function pollE3DC() {
 
         // Da Erzeugerwerte im Portal positiv angezeigt werden, nehmen wir den Betrag:
         const zusaetzlicheEinspeisung = Math.abs(zusaetzlicheEinspeisungRaw);
-        //console.log(zusaetzlicheEinspeisungData.data, zusaetzlicheEinspeisung);
 
         //const zusaetzlicheEinspeisung = zusaetzlicheEinspeisungData.data[1] * 65535 + zusaetzlicheEinspeisungData.data[0]; //wenn dunkel und produktion 0, dann passt das nicht, es werden immer 65535 ausgegeben
 
         const produktionGesamt = leistung + zusaetzlicheEinspeisung;
-
-        // // 2. Zusätzliche Einspeisung / Erzeuger (Reg 40075, 2 Register)
-        // var zusaetzlicheEinspeisungData = await modbusClient.readHoldingRegisters(40075, 2);
-        // const zusaetzlicheEinspeisung = zusaetzlicheEinspeisungData.data[0] + zusaetzlicheEinspeisungData.data[1] * 65536;
-
-        // const produktionGesamt = leistung + zusaetzlicheEinspeisung;
 
         // 3. Hausverbrauch (Reg 40071, 2 Register)
         var hausverbrauchData = await modbusClient.readHoldingRegisters(40071, 2);
