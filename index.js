@@ -222,10 +222,10 @@ async function pollE3DC() {
         const netzLabel = netzLeistung < 0 ? "Netzeinspeisung" : "Netzbezug";
 
         // An KNX senden
-        knxConnection.write("1/3/150", produktionGesamt, "9.001");
+        knxConnection.write("1/3/150", produktionGesamt, "8.001");
         knxConnection.write("1/3/151", soc, "5.001");
-        knxConnection.write("1/3/152", hausverbrauch, "9.001");
-        knxConnection.write("1/3/154", netzLeistung, "9.001");
+        knxConnection.write("1/3/152", hausverbrauch, "8.001");
+        knxConnection.write("1/3/154", netzLeistung, "8.001");
 
         // Werte für das direkte Rendern aktualisieren
         latestData = {
